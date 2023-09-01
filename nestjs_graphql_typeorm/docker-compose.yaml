@@ -35,4 +35,8 @@ services:
       expose:
          - "${POSTGRES_PORT}/tcp"
 
+#primero se debe iniciar el comando "docker-compose run nestjs bash"
+#y luego que se accesa al contenedor se deben instalar los paquete con el comando "npm install"
+#por ultimo se debe salir del contenedor, eliminar los contenedores anteriores con "docker-comopse down"
+#y luego ejecutar "docker-compose up -d" para que inicien los contenedores en background
     
