@@ -1,0 +1,38 @@
+version: '3.3'
+
+services:
+
+  nestjs:
+      # image: nestjscontainer2:latest
+
+      build: ../
+
+      container_name: nestjs
+      
+      volumes:
+         - .:/home/dev/
+           
+      command: "npm run start:dev"
+        
+      ports:
+         - 3000:3000
+      
+      env_file:
+         - env.envar
+
+      depends_on:
+         - postgres
+
+  postgres:
+   
+      image: postgres:14-alpine
+      
+      container_name: postgres
+         
+      env_file:
+         - env.envar
+      
+      expose:
+         - "${POSTGRES_PORT}/tcp"
+
+    

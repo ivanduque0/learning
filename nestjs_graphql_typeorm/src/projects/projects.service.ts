@@ -1,16 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { Project, ProjectStatus } from './project.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 
 @Injectable()
 export class ProjectsService {
 
-    findAll(): Project[]{
-        return [{
-            id: 1,
-            name: "Making a BackEnd with NestJs",
-            description: "I'm making my first backend with NestJs",
-            status: ProjectStatus.IN_PROGRESS
-        }]
+    constructor(
+        @InjectRepository(Project) private projectRepository: Repository<Project>
+    ){
+
+    }
+
+    findAll(): Promise<Project[]>{
+        return this.projectRepository.find();
     }
 }
