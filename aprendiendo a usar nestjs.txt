@@ -2,3 +2,4 @@ nest new <nombre del proyecto> = se usa para crear un proyecto nuevo
 nest g module <ruta de la carpeta> = se usa para crear un modulo
 nest g service <ruta de la carpeta> = se usa para crear un servicio
 nest g resolver <ruta de la carpeta> = se usar para crear un resolver de GraphQL
+nest g resource <ruta de la carpeta> = crea una carpeta con todos losrecursos necesarios para crear la api

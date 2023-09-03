@@ -6,6 +6,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { join } from 'path';
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { DevelopersModule } from './developers/developers.module';
+import { RolesModule } from './roles/roles.module';
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -22,7 +24,9 @@ import { TypeOrmModule } from "@nestjs/typeorm";
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
-    ProjectsModule
+    ProjectsModule,
+    DevelopersModule,
+    RolesModule
   ],
   controllers: [AppController],
   providers: [AppService],

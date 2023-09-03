@@ -2,13 +2,92 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Role {
+  id: Int!
+  name: String!
+  projects: [Project!]
+  developers: [Developer!]
+}
+
+type Developer {
+  id: Int!
+  name: String!
+  email: String!
+  projects: [Project!]
+  roles: [Role!]
+}
+
 type Project {
   id: Int!
   name: String!
   description: String
-  status: String!
+  status: String
+  roles: [Role!]
+  developers: [Developer!]
 }
 
 type Query {
-  projects: [Project!]!
+  findAll: [Project!]!
+  findOne(id: Int!): Project!
+  roles: [Role!]!
+  role(id: Int!): Role!
+  developers: [Developer!]!
+  developer(id: Int!): Developer!
+}
+
+type Mutation {
+  createProject(projectInput: CreateProjectInput!): Project!
+  updateProject(updateProjectInput: UpdateProjectInput!): Project!
+  removeProject(id: Int!): Project!
+  addRoleToProject(projectId: Int!, roleId: Int!): Project!
+  removeProjectFromRole(projectId: Int!, roleId: Int!): Project!
+  addDeveloperToProject(projectId: Int!, developerId: Int!): Project!
+  removeProjectFromDeveloper(projectId: Int!, developerId: Int!): Project!
+  createRole(createRoleInput: CreateRoleInput!): Role!
+  updateRole(updateRoleInput: UpdateRoleInput!): Role!
+  removeRole(id: Int!): Role!
+  createDeveloper(createDeveloperInput: CreateDeveloperInput!): Developer!
+  updateDeveloper(updateDeveloperInput: UpdateDeveloperInput!): Developer!
+  removeDeveloper(id: Int!): Developer!
+  addRoleToDeveloper(developerId: Int!, roleId: Int!): Developer!
+  removeDeveloperFromRole(developerId: Int!, roleId: Int!): Developer!
+}
+
+input CreateProjectInput {
+  name: String!
+  description: String
+  status: String = "PENDING"
+}
+
+input UpdateProjectInput {
+  name: String
+  description: String
+  status: StatusProject
+  id: Int!
+}
+
+enum StatusProject {
+  PENDING
+  IN_PROGRESS
+  FINISHED
+}
+
+input CreateRoleInput {
+  name: String!
+}
+
+input UpdateRoleInput {
+  name: String
+  id: Int!
+}
+
+input CreateDeveloperInput {
+  name: String!
+  email: String!
+}
+
+input UpdateDeveloperInput {
+  name: String
+  email: String
+  id: Int!
 }
