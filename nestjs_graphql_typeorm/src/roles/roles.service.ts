@@ -3,7 +3,8 @@ import { CreateRoleInput } from './dto/create-role.input';
 import { UpdateRoleInput } from './dto/update-role.input';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from './entities/role.entity';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
+import { GraphQLError } from 'graphql';
 
 @Injectable()
 export class RolesService {
@@ -12,8 +13,13 @@ export class RolesService {
     @InjectRepository(Role) private  rolesRepository: Repository<Role>
   ){}
 
-  create(createRoleInput: CreateRoleInput): Promise<Role> {
-    const role = this.rolesRepository.create(createRoleInput);
+  async create(createRoleInput: CreateRoleInput): Promise<Role> {
+    let roleWithSameName = await this.findOneByName(createRoleInput.name)
+    if (roleWithSameName) {
+      throw new GraphQLError(`There already exists a role with this name`);
+    }
+
+    let role = this.rolesRepository.create(createRoleInput);
     return this.rolesRepository.save(role)
   }
 
@@ -21,7 +27,7 @@ export class RolesService {
     return this.rolesRepository.find()
   }
 
-  findOne(id: number): Promise<Role> {
+  findOneById(id: number): Promise<Role> {
     return this.rolesRepository.findOne({
       where: {
         id
@@ -29,12 +35,54 @@ export class RolesService {
     })
   }
 
-  update(updateProjectInput: UpdateRoleInput) {
-      return this.rolesRepository.update({id:updateProjectInput.id}, updateProjectInput);
+  findOneByName(name: string): Promise<Role> {
+    return this.rolesRepository.findOne({
+      where: {
+        name: name
+      },
+    })
   }
 
-  remove(id: number) {
-      return this.rolesRepository.delete({id})
+  findRolesByIds(Ids: number[]){
+    if (!Ids) {
+      return []
+    }
+    return this.rolesRepository.find(
+      {
+        where: {
+          id: In(Ids)
+        }
+      }
+    )
+  }
+
+  async update(updateRoleInput: UpdateRoleInput) {
+      let role = await this.findOneById(updateRoleInput.id)
+      if (!role) {
+        throw new GraphQLError(`The rol doesn't exists`);
+      }
+      if (updateRoleInput.name) {
+        let roleWithSameEmail = await this.findOneByName(updateRoleInput.name)
+        if (roleWithSameEmail) {
+          if (roleWithSameEmail.id==updateRoleInput.id) {
+            throw new GraphQLError(`The rol name has not received any change`);
+          }
+          throw new GraphQLError(`There already exists a role with this name`);
+        }
+      }
+      
+      await this.rolesRepository.update({id:updateRoleInput.id}, updateRoleInput);
+      role = await this.findOneById(updateRoleInput.id)
+      return role
+  }
+
+  async remove(id: number) {
+      let role = await this.findOneById(id);
+      if(!role){
+        throw new GraphQLError(`This role doesn't exists`);
+      }
+      await this.rolesRepository.delete({id})
+      return role
   }
 
 }

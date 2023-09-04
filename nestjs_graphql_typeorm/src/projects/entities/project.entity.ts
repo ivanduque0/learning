@@ -4,8 +4,9 @@ import { Role } from "src/roles/entities/role.entity";
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 export enum StatusProject{
-    PENDING = 'PENDING',
     IN_PROGRESS = 'IN PROGRESS',
+    PENDING = 'PENDING',
+    PAUSED = 'PAUSED',
     FINISHED = 'FINISHED'
 }
 registerEnumType(StatusProject, {

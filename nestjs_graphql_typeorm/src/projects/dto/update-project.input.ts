@@ -13,7 +13,7 @@ export class UpdateProjectInput extends PartialType(CreateProjectInput) {
       message: "Project name is too long"
   })
   @IsNotEmpty({
-      message: "Name is required"
+      message: "Project name is required"
   })
   @Field({nullable: true})
   name?: string;

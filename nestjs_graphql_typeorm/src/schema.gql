@@ -29,10 +29,29 @@ type Project {
 type Query {
   findAll: [Project!]!
   findOne(id: Int!): Project!
+  findByRolesAndStatuses(filterProjectInput: FilterProjectsInput!): [Project!]!
   roles: [Role!]!
   role(id: Int!): Role!
   developers: [Developer!]!
   developer(id: Int!): Developer!
+  findByRolesAndProjects(filterDeveloperInput: FilterDevelopersInput!): [Developer!]!
+}
+
+input FilterProjectsInput {
+  statuses: [StatusProject!]
+  rolesIds: [Int!]
+}
+
+enum StatusProject {
+  IN_PROGRESS
+  PENDING
+  PAUSED
+  FINISHED
+}
+
+input FilterDevelopersInput {
+  projectsIds: [Int!]
+  rolesIds: [Int!]
 }
 
 type Mutation {
@@ -64,12 +83,6 @@ input UpdateProjectInput {
   description: String
   status: StatusProject
   id: Int!
-}
-
-enum StatusProject {
-  PENDING
-  IN_PROGRESS
-  FINISHED
 }
 
 input CreateRoleInput {

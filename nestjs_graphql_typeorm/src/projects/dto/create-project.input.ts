@@ -11,7 +11,7 @@ export class CreateProjectInput {
         message: "Project name is too long"
     })
     @IsNotEmpty({
-        message: "Name is required"
+        message: "Project name is required"
     })
     @Field()
     name: string;

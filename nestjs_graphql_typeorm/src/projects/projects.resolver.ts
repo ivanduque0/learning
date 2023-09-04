@@ -4,6 +4,7 @@ import { Project } from './entities/project.entity';
 import { CreateProjectInput } from './dto/create-project.input';
 import { Role } from "../roles/entities/role.entity";
 import { UpdateProjectInput } from './dto/update-project.input';
+import { FilterProjectsInput } from './dto/filter-projects.input';
 
 @Resolver()
 export class ProjectsResolver {
@@ -20,22 +21,24 @@ export class ProjectsResolver {
         return this.projectsService.findOne(id); 
     }
 
+    @Query(()=> [Project])
+    findByRolesAndStatuses(@Args('filterProjectInput') filterProjectInput: FilterProjectsInput): Promise<Project[]> {
+        return this.projectsService.findByRolesAndStatuses(filterProjectInput); 
+    }
+
     @Mutation(() => Project)
     createProject(@Args('projectInput') projectInput: CreateProjectInput){
         return this.projectsService.createProject(projectInput)
     }
 
     @Mutation(() => Project)
-    updateProject(@Args('updateProjectInput') updateProjectInput: UpdateProjectInput): Promise<Project> {
-        this.projectsService.update(updateProjectInput);
-        return this.projectsService.findOne(updateProjectInput.id);
+    updateProject(@Args('updateProjectInput') updateProjectInput: UpdateProjectInput) {
+        return this.projectsService.update(updateProjectInput);
     }
   
     @Mutation(() => Project)
     removeProject(@Args('id', { type: () => Int }) id: number) {
-      let project = this.projectsService.findOne(id);
-      this.projectsService.remove(id);
-      return project;
+      return this.projectsService.remove(id);
     }
 
     @Mutation(() => Project, { name: 'addRoleToProject' })

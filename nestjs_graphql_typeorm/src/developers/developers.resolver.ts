@@ -3,6 +3,7 @@ import { DevelopersService } from './developers.service';
 import { Developer } from './entities/developer.entity';
 import { CreateDeveloperInput } from './dto/create-developer.input';
 import { UpdateDeveloperInput } from './dto/update-developer.input';
+import { FilterDevelopersInput } from './dto/filter-developers.input';
 
 @Resolver(() => Developer)
 export class DevelopersResolver {
@@ -20,20 +21,22 @@ export class DevelopersResolver {
 
   @Query(() => Developer, { name: 'developer' })
   findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.developersService.findOne(id);
+    return this.developersService.findOneById(id);
+  }
+
+  @Query(()=> [Developer])
+  findByRolesAndProjects(@Args('filterDeveloperInput') filterDeveloperInput: FilterDevelopersInput): Promise<Developer[]> {
+      return this.developersService.findByRolesAndProjects(filterDeveloperInput); 
   }
 
   @Mutation(() => Developer)
-  updateDeveloper(@Args('updateDeveloperInput') updateDeveloperInput: UpdateDeveloperInput): Promise<Developer> {
-    this.developersService.update(updateDeveloperInput);
-    return this.developersService.findOne(updateDeveloperInput.id);
+  updateDeveloper(@Args('updateDeveloperInput') updateDeveloperInput: UpdateDeveloperInput) {
+    return this.developersService.update(updateDeveloperInput);
   }
 
   @Mutation(() => Developer)
   removeDeveloper(@Args('id', { type: () => Int }) id: number) {
-    let developer = this.developersService.findOne(id);
-    this.developersService.remove(id);
-    return developer;
+    return this.developersService.remove(id);
   }
 
   @Mutation(() => Developer, { name: 'addRoleToDeveloper' })

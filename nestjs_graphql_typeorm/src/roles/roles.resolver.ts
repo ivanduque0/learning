@@ -19,20 +19,17 @@ export class RolesResolver {
   }
 
   @Query(() => Role, { name: 'role' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.rolesService.findOne(id);
+  findOneById(@Args('id', { type: () => Int }) id: number) {
+    return this.rolesService.findOneById(id);
   }
 
   @Mutation(() => Role)
-  updateRole(@Args('updateRoleInput') updateRoleInput: UpdateRoleInput): Promise<Role> {
-      this.rolesService.update(updateRoleInput);
-      return this.rolesService.findOne(updateRoleInput.id);
+  updateRole(@Args('updateRoleInput') updateRoleInput: UpdateRoleInput) {
+    return this.rolesService.update(updateRoleInput);
   }
 
   @Mutation(() => Role)
   removeRole(@Args('id', { type: () => Int }) id: number) {
-    let role = this.rolesService.findOne(id);
-    this.rolesService.remove(id);
-    return role;
+    return this.rolesService.remove(id);
   }
 }
