@@ -33,4 +33,4 @@ services:
          - env.envar
       
       expose:
-         - "${POSTGRES_PORT}/tcp"
+         - "5432/tcp"

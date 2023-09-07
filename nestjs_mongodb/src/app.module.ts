@@ -6,18 +6,15 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
-    
-    //MongooseModule.forRoot('mongodb://test:test@mongo:27017'),
-    // MongooseModule.forRoot('mongodb://test:test@localhost:27017'),
-    MongooseModule.forRoot('mongodb://test:test@mongodb:27017',
+    MongooseModule.forRoot(`mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@mongo:27017`,
+    {
+      dbName: process.env.MONGO_INITDB_DATABASE,
+      // auth: {
+      //   username: process.env.MONGO_INITDB_ROOT_USERNAME,
+      //   password: process.env.MONGO_INITDB_ROOT_PASSWORD,
+      // },
+    }
     ),
-    // MongooseModule.forRoot('mongodb://root:pass12345@localhost', {
-    //   //dbName: process.env.DATABASE_NAME,
-    //   auth: {
-    //     username: process.env.MONGO_INITDB_ROOT_USERNAME,
-    //     password: process.env.MONGO_INITDB_ROOT_PASSWORD,
-    //   },
-    // }),
     ProjectsModule, 
     RolesModule, 
     DevelopersModule],
