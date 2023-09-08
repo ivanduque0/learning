@@ -1,4 +1,3 @@
 # learning
 
-docker command:
-docker run -it -p 3000:3000 -v /home/ivan/learning:/home/app/nestjs node bash
+Se debe ejecutar el comando "docker-compose up" dentro de la carpeta del proyecto que se desee probar para iniciar los contenedores y correr el proyecto
