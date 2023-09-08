@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsArray, IsEnum, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { StatusProject } from "src/schemas/projects.schema";
 
 export class UpdateProjectDto {
@@ -14,4 +14,8 @@ export class UpdateProjectDto {
     @IsEnum(StatusProject)
     @IsOptional()
     status?:StatusProject
+
+    @IsArray()
+    @IsOptional()
+    roles?: string[]=[];
 }

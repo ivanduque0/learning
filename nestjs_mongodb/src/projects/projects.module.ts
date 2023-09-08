@@ -4,6 +4,7 @@ import { ProjectsService } from './projects.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Project, ProjectSchema } from 'src/schemas/projects.schema';
 import { Developer, DeveloperSchema } from 'src/schemas/developers.schema';
+import { RolesModule } from 'src/roles/roles.module';
 
 @Module({
   imports:[
@@ -16,7 +17,8 @@ import { Developer, DeveloperSchema } from 'src/schemas/developers.schema';
       { name:Developer.name,
         schema:DeveloperSchema
       }
-    ])
+    ]),
+    RolesModule
   ],
   controllers: [ProjectsController],
   providers: [ProjectsService],

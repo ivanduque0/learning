@@ -1,4 +1,4 @@
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Developer } from 'src/schemas/developers.schema';
@@ -86,9 +86,22 @@ export class DevelopersService {
         );
     }
 
+    async checkRolesInDeveloper(roles:Role[], id:string){
+        let developer = await this.developerModel.findOne(
+            {   _id:id,
+                roles: { $in: roles}
+            }
+        );
+        if(!developer) throw new ForbiddenException("The developer doesn't have the required roles for the projects")
+    }
+
     async addToProject(projectsToAdd: string[], foundDeveloper) {
         const foundProjects = await this.projectsService.findProjectsByIDs(projectsToAdd);
-
+        for (let index = 0; index < foundProjects.length; index++) {
+            let projectRoles = foundProjects[index].roles?foundProjects[index].roles:[];
+            await this.checkRolesInDeveloper(projectRoles, foundDeveloper._id);
+            
+        }
         if (foundDeveloper && foundProjects) {
   
             return this.developerModel.updateMany(
@@ -104,6 +117,39 @@ export class DevelopersService {
         } else {
             throw new Error(`Founding developer or projects problem`);
         }
+    }
+
+    async findDevelopersByRolesAndProjects(roles:string[]=[], projects:string[]=[]){
+        const foundRoles = await this.roleService.findRolesByIDs(roles);
+        const foundProjects = await this.projectsService.findProjectsByIDs(projects)
+        if (roles.length && !projects.length) {
+            return await this.developerModel.find(
+                {
+                    roles: { 
+                        $in: foundRoles 
+                    }, 
+                }
+            )
+        }
+        if (!roles.length && projects.length) {
+            return await this.developerModel.find(
+                {
+                    projects: { 
+                        $in: foundProjects 
+                    }, 
+                }
+            )
+        }
+        return await this.developerModel.find(
+            {
+                roles: { 
+                    $in: foundRoles 
+                }, 
+                projects: {
+                    $in: foundProjects
+                }
+            }
+        )
     }
 
 }

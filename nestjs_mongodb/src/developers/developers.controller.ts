@@ -2,6 +2,7 @@ import { Body, ConflictException, Controller, Delete, Get, HttpCode, NotFoundExc
 import { DevelopersService } from './developers.service';
 import { CreateDeveloperDto } from './dtos/create-developer.dto';
 import { UpdateDeveloperDto } from './dtos/update-developer.dto';
+import { SearchDevelopersDto } from './dtos/search-developers.dto';
 
 @Controller('developers')
 export class DevelopersController {
@@ -47,11 +48,16 @@ export class DevelopersController {
             if (!developer) {
                 throw new NotFoundException("Developer not found")
             }
-            console.log(body.projects)
             return this.developerService.addToProject(body.projects, developer);
         } catch (error) {
             throw new NotFoundException("Developer not found")
         }
+    }
+
+    @Post("getMany/")
+    @HttpCode(200)
+    async findProjectsByRolesAndStatus(@Body() body:SearchDevelopersDto) {
+        return await this.developerService.findDevelopersByRolesAndProjects(body.roles, body.projects);
     }
 
     @Delete("/removeFromRole/:id")
