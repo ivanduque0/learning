@@ -1,4 +1,4 @@
-FROM node
+FROM node:current-buster
 
 ENV USUARIO=dev
 ENV GRUPO=dev
